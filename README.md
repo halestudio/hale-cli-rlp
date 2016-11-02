@@ -1,8 +1,9 @@
-hale-pro-cli
-============
+hale-cli-seed
+=============
 
-hale command line interface.
-Lists available commands when run without arguments.
+Template project for a custom hale command line interface.
+
+The CLI lists available commands when run without arguments.
 
 
 Build
