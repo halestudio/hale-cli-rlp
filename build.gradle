@@ -25,6 +25,8 @@ version = '3.1.0-SNAPSHOT'
  */
 
 repositories {
+  mavenLocal() // for testing
+  
   maven { // wetransform release repository (HALE releases and Eclipse dependencies)
     url 'https://artifactory.wetransform.to/artifactory/libs-release-local'
   }
@@ -99,7 +101,7 @@ task(generateSchemaMapping, dependsOn: 'classes', type: JavaExec) {
   
   main = mainClassName
   classpath = sourceSets.main.runtimeClasspath
-  args('rlp', 'map-schemas',
+  args('rlp', 'match-schemas',
     '--reference-schema',
     alignmentsPath + '/schemas/NAS_6.0.1/schema/aaa.xsd',
     '--target-schema',

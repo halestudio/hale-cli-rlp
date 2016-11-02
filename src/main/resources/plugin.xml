@@ -10,10 +10,10 @@
             name="rlp">
       </group>
       <command
-            class="to.wetransform.hale.rlp.cli.MapSchemasCommand"
+            class="to.wetransform.hale.rlp.cli.match.MatchSchemasCommand"
             group="hale-cli-rlp"
             id="hale-cli-rlp.match"
-            name="map-schemas">
+            name="match-schemas">
       </command>
    </extension>
 </plugin>
