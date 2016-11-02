@@ -9,5 +9,11 @@
             id="hale-cli-rlp"
             name="rlp">
       </group>
+      <command
+            class="to.wetransform.hale.rlp.cli.MapSchemasCommand"
+            group="hale-cli-rlp"
+            id="hale-cli-rlp.match"
+            name="map-schemas">
+      </command>
    </extension>
 </plugin>

@@ -91,6 +91,24 @@ applicationDefaultJvmArgs = [
 ]
 
 /*
+ * Custom run configuurations
+ */
+
+task(generateSchemaMapping, dependsOn: 'classes', type: JavaExec) {
+  def alignmentsPath = '../inspire-alignements'
+  
+  main = mainClassName
+  classpath = sourceSets.main.runtimeClasspath
+  args('rlp', 'map-schemas',
+    '--reference-schema',
+    alignmentsPath + '/schemas/NAS_6.0.1/schema/aaa.xsd',
+    '--target-schema',
+    'testbed/dbschema.hsd'
+  )
+  jvmArgs.addAll(applicationDefaultJvmArgs)
+}
+
+/*
  * plugin.xml and OSGi manifest
  *
  * For the plugin.xml file to be recognised there must be an
