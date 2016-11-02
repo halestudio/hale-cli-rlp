@@ -57,6 +57,9 @@ class MatchSchemasCommand implements Command {
     def targetSS = new DefaultSchemaSpace()
     targetSS.addSchema(targetSchema)
 
+    project.resources << SchemaCLI.getSchemaIOConfig(options, 'reference-schema', true)
+    project.resources << SchemaCLI.getSchemaIOConfig(options, 'target-schema', false)
+
     ReportHandler reports = HaleCLIUtil.createReportHandler()
 
     ProjectHelper.saveProject(project, alignment, sourceSS, targetSS, output, reports, 'halex')
