@@ -1,4 +1,4 @@
-package to.wetransform.customcli;
+package to.wetransform.hale.rlp.cli;
 
 public class CLI {
 

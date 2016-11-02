@@ -14,10 +14,10 @@ sourceCompatibility = '1.8'
 group = 'to.wetransform'
 
 project.ext {
-  cliVersion = '2.9.5-SNAPSHOT'
+  cliVersion = '3.1.0-SNAPSHOT'
 }
 
-version = '2.9.5-SNAPSHOT'
+version = '3.1.0-SNAPSHOT'
 //TODO define versioning strategy, specifically in respect to the main CLI project
 
 /*
@@ -100,7 +100,7 @@ applicationDefaultJvmArgs = [
  */
 jar {
   manifest {
-    symbolicName = 'to.wetransform.customcli;singleton:=true'
+    symbolicName = 'to.wetransform.hale.rlp.cli;singleton:=true'
     instruction 'Bundle-Vendor', 'wetransform GmbH'
   }
 }

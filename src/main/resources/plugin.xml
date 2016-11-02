@@ -4,12 +4,10 @@
 >
    <extension
          point="eu.esdihumboldt.cli">
-      <!--
-      <command
-            class="to.wetransform.customcli.VersionCommand"
-            id="hale-custom-cli.version"
-            name="version">
-      </command>
-      -->
+      <group
+            description="LVermGeo RLP specific commands"
+            id="hale-cli-rlp"
+            name="rlp">
+      </group>
    </extension>
 </plugin>

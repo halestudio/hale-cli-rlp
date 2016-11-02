@@ -1,9 +1,10 @@
-hale-cli-seed
+hale-cli-rlp
 =============
 
-Template project for a custom hale command line interface.
+Custom hale command line interface for LVermGeo RLP.
 
 The CLI lists available commands when run without arguments.
+RLP specific commands can be found in the category `rlp`.
 
 
 Build
