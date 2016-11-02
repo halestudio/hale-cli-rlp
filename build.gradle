@@ -68,7 +68,7 @@ dependencies {
   // hale CLI
   compile "to.wetransform:hale-cli:$cliVersion"
 
-  // hale-pro dependencies
+  // custom dependencies
   //TODO
 
   // Testing
@@ -100,7 +100,7 @@ applicationDefaultJvmArgs = [
  */
 jar {
   manifest {
-    symbolicName = 'to.wetransform.halepro.cli;singleton:=true'
+    symbolicName = 'to.wetransform.customcli;singleton:=true'
     instruction 'Bundle-Vendor', 'wetransform GmbH'
   }
 }

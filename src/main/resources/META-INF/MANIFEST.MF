@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: hale-pro-cli
-Bundle-SymbolicName: to.wetransform.halepro.cli;singleton:=true
+Bundle-Name: hale-custom-cli
+Bundle-SymbolicName: to.wetransform.customcli;singleton:=true

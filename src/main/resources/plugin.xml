@@ -6,8 +6,8 @@
          point="eu.esdihumboldt.cli">
       <!--
       <command
-            class="to.wetransform.halepro.cli.VersionCommand"
-            id="hale-pro-cli.version"
+            class="to.wetransform.customcli.VersionCommand"
+            id="hale-custom-cli.version"
             name="version">
       </command>
       -->
