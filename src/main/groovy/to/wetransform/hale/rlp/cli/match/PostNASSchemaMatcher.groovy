@@ -1,10 +1,21 @@
 package to.wetransform.hale.rlp.cli.match
 
-import javax.xml.namespace.QName;
+import javax.xml.namespace.QName
+
+import com.google.common.collect.ArrayListMultimap;
 
 import eu.esdihumboldt.hale.common.align.model.Alignment
+import eu.esdihumboldt.hale.common.align.model.EntityDefinition;
 import eu.esdihumboldt.hale.common.align.model.MutableAlignment
-import eu.esdihumboldt.hale.common.align.model.impl.DefaultAlignment;
+import eu.esdihumboldt.hale.common.align.model.MutableCell;
+import eu.esdihumboldt.hale.common.align.model.functions.RetypeFunction;
+import eu.esdihumboldt.hale.common.align.model.impl.DefaultAlignment
+import eu.esdihumboldt.hale.common.align.model.impl.DefaultCell
+import eu.esdihumboldt.hale.common.align.model.impl.DefaultProperty
+import eu.esdihumboldt.hale.common.align.model.impl.DefaultType
+import eu.esdihumboldt.hale.common.align.model.impl.PropertyEntityDefinition;
+import eu.esdihumboldt.hale.common.align.model.impl.TypeEntityDefinition
+import eu.esdihumboldt.hale.common.schema.SchemaSpaceID;
 import eu.esdihumboldt.hale.common.schema.model.TypeDefinition
 import eu.esdihumboldt.hale.common.schema.model.TypeIndex
 import groovy.transform.CompileStatic
@@ -113,7 +124,32 @@ class PostNASSchemaMatcher implements SchemaMatcher {
   }
 
   private void relateTypes(MutableAlignment alignment, TypeDefinition ref, TypeDefinition target) {
-    //TODO
+    EntityDefinition refEntity = new TypeEntityDefinition(ref, SchemaSpaceID.SOURCE, null)
+    EntityDefinition targetEntity = new TypeEntityDefinition(target, SchemaSpaceID.TARGET, null)
+
+    // create Retype
+    alignment.addCell(createCell(refEntity, targetEntity, RetypeFunction.ID))
+
+    //TODO properties
+  }
+
+  private MutableCell createCell(EntityDefinition refEntity, EntityDefinition targetEntity, String functionId) {
+    MutableCell cell = new DefaultCell()
+
+    def ref = refEntity instanceof TypeEntityDefinition ? new DefaultType(refEntity) : new DefaultProperty((PropertyEntityDefinition) refEntity)
+    def target = targetEntity instanceof TypeEntityDefinition ? new DefaultType(targetEntity) : new DefaultProperty((PropertyEntityDefinition) targetEntity)
+
+    def sources = ArrayListMultimap.create()
+    sources.put(null, ref)
+    cell.source = sources
+
+    def targets = ArrayListMultimap.create()
+    targets.put(null, target)
+    cell.target = targets
+
+    cell.transformationIdentifier = functionId
+
+    cell
   }
 
 }
