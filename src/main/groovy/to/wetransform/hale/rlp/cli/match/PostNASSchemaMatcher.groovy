@@ -174,8 +174,7 @@ class PostNASSchemaMatcher implements SchemaMatcher {
           if (byName) {
             // relate to entity
 
-            if (byName.propertyPath && byName.propertyPath[-1].child.asProperty() &&
-                byName.propertyPath[-1].child.asProperty().propertyType.name.localPart == 'ReferenceType') {
+            if (isReferenceType(byName)) {
               // for ReferenceType connect to href
               def byNameHref = new EntityAccessor(byName).findChildren('href').toEntityDefinition()
               if (byNameHref) {
@@ -199,6 +198,23 @@ class PostNASSchemaMatcher implements SchemaMatcher {
           }
         }
       }
+    }
+  }
+
+  private boolean isReferenceType(EntityDefinition entity) {
+    if (entity.propertyPath && entity.propertyPath[-1].child.asProperty()) {
+      def propertyType = entity.propertyPath[-1].child.asProperty().propertyType
+      if (propertyType.name.localPart == 'ReferenceType') {
+        // normal GML ReferenceType
+        true
+      }
+      else {
+        // AbstractMemberType extension
+        propertyType.superType && propertyType.superType.name.localPart == 'AbstractMemberType'
+      }
+    }
+    else {
+      false
     }
   }
 
