@@ -191,7 +191,17 @@ class PostNASSchemaMatcher implements SchemaMatcher {
           }
           else if (property.name.localPart == 'gml_id') {
             // special case handling for GML id
-            //TODO
+
+            // mapping for GML id and GML identifier
+            //XXX not sure yet how the relation to the identifier actually be described
+            def refId = new EntityAccessor(refEntity).findChildren('id').toEntityDefinition()
+            if (refId) {
+              alignment.addCell(createCell(refId, targetProperty, RenameFunction.ID))
+            }
+            def refIdent = new EntityAccessor(refEntity).findChildren('identifier').toEntityDefinition()
+            if (refIdent) {
+              alignment.addCell(createCell(refIdent, targetProperty, RenameFunction.ID))
+            }
           }
           else {
             println "No source match found for property ${target.displayName}.$it.displayName - $propertyInfo"
