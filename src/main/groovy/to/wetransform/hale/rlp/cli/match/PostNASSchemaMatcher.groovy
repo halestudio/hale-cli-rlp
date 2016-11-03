@@ -5,9 +5,11 @@ import javax.xml.namespace.QName
 import com.google.common.collect.ArrayListMultimap;
 
 import eu.esdihumboldt.hale.common.align.model.Alignment
+import eu.esdihumboldt.hale.common.align.model.AlignmentUtil;
 import eu.esdihumboldt.hale.common.align.model.EntityDefinition;
 import eu.esdihumboldt.hale.common.align.model.MutableAlignment
-import eu.esdihumboldt.hale.common.align.model.MutableCell;
+import eu.esdihumboldt.hale.common.align.model.MutableCell
+import eu.esdihumboldt.hale.common.align.model.functions.RenameFunction;
 import eu.esdihumboldt.hale.common.align.model.functions.RetypeFunction;
 import eu.esdihumboldt.hale.common.align.model.impl.DefaultAlignment
 import eu.esdihumboldt.hale.common.align.model.impl.DefaultCell
@@ -15,7 +17,9 @@ import eu.esdihumboldt.hale.common.align.model.impl.DefaultProperty
 import eu.esdihumboldt.hale.common.align.model.impl.DefaultType
 import eu.esdihumboldt.hale.common.align.model.impl.PropertyEntityDefinition;
 import eu.esdihumboldt.hale.common.align.model.impl.TypeEntityDefinition
-import eu.esdihumboldt.hale.common.schema.SchemaSpaceID;
+import eu.esdihumboldt.hale.common.schema.SchemaSpaceID
+import eu.esdihumboldt.hale.common.schema.model.ChildDefinition;
+import eu.esdihumboldt.hale.common.schema.model.DefinitionUtil;
 import eu.esdihumboldt.hale.common.schema.model.TypeDefinition
 import eu.esdihumboldt.hale.common.schema.model.TypeIndex
 import groovy.transform.CompileStatic
@@ -130,7 +134,27 @@ class PostNASSchemaMatcher implements SchemaMatcher {
     // create Retype
     alignment.addCell(createCell(refEntity, targetEntity, RetypeFunction.ID))
 
-    //TODO properties
+    // try to find matches for properties
+
+    // first check all target properties for the information in their description
+    //XXX really simple - no handling of choices
+    def children = (Collection<ChildDefinition<?>>) target.getChildren()
+    children.each {
+      def property = it.asProperty()
+      if (property) {
+        def propertyInfo = PostNASPropertyInfo.fromDescription(property.description)
+
+        def refProperty = propertyInfo.findEntity(refEntity)
+        if (refProperty) {
+          def targetProperty = AlignmentUtil.getChild(targetEntity, it.name)
+
+          alignment.addCell(createCell(refProperty, targetProperty, RenameFunction.ID))
+        }
+        else {
+          println "No source match found for property ${target.displayName}.$it.displayName - $propertyInfo"
+        }
+      }
+    }
   }
 
   private MutableCell createCell(EntityDefinition refEntity, EntityDefinition targetEntity, String functionId) {
