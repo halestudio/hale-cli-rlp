@@ -22,6 +22,9 @@ class PostNASPropertyInfo {
   String typeName
   String cardinality
 
+  String assocRef
+  String assocType
+
   static PostNASPropertyInfo fromDescription(String description) {
     String baseProperty
     List<String> path
@@ -29,30 +32,69 @@ class PostNASPropertyInfo {
     String typeName
     String cardinality
 
+    /**
+     * Association type in reference schema
+     */
+    String assocRef
+    /**
+     * Association type in PostNAS schema
+     */
+    String assocType
+
     if (description) {
-      def parts = description.split(/\s/)
-      if (parts.length >= 1) {
-        baseProperty = parts[0]
-      }
-      if (parts.length >= 2) {
-        String propertyString = parts[1]
-        if (propertyString) {
-          path = propertyString.split(/\|/) as List
+      if (description.startsWith('Assoziation zu:')) {
+        // association
+        // Example 'Assoziation zu: FeatureType AA_Meilenstein (aa_meilenstein) 1'
+
+        def descr = description[15..-1].trim()
+        def parts = descr.split(/\s/)
+
+        if (parts.length >= 2) {
+          assocRef = parts[1] ?: null
+        }
+        if (parts.length >= 3) {
+          def at = parts[2]
+          if (at.startsWith('(')) {
+            at = at[1..-1]
+          }
+          if (at.endsWith(')')) {
+            at = at[0..-2]
+          }
+          assocType = at
+        }
+        if (parts.length >= 4) {
+          cardinality = parts[3] ?: null
         }
       }
-      if (parts.length >= 3) {
-        typeCategory = parts[2] ?: null
-      }
-      if (parts.length >= 4) {
-        typeName = parts[3] ?: null
-      }
-      if (parts.length >= 5) {
-        cardinality = parts[4] ?: null
+      else {
+        // "normal" property
+        // Example 'modellart AA_Modellart|advStandardModell enumeration AA_AdVStandardModell 1'
+
+        def parts = description.split(/\s/)
+        if (parts.length >= 1) {
+          baseProperty = parts[0]
+        }
+        if (parts.length >= 2) {
+          String propertyString = parts[1]
+          if (propertyString) {
+            path = propertyString.split(/\|/) as List
+          }
+        }
+        if (parts.length >= 3) {
+          typeCategory = parts[2] ?: null
+        }
+        if (parts.length >= 4) {
+          typeName = parts[3] ?: null
+        }
+        if (parts.length >= 5) {
+          cardinality = parts[4] ?: null
+        }
       }
     }
 
     new PostNASPropertyInfo(baseProperty: baseProperty, path: path,
-      typeCategory: typeCategory, typeName: typeName, cardinality: cardinality)
+      typeCategory: typeCategory, typeName: typeName, cardinality: cardinality,
+      assocRef: assocRef, assocType: assocType)
   }
 
   EntityDefinition findEntity(EntityDefinition typeEntity) {
