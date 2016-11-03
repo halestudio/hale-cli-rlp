@@ -2,8 +2,9 @@ package to.wetransform.hale.rlp.cli.match
 
 import javax.xml.namespace.QName
 
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ArrayListMultimap
 
+import eu.esdihumboldt.hale.common.align.groovy.accessor.EntityAccessor;
 import eu.esdihumboldt.hale.common.align.model.Alignment
 import eu.esdihumboldt.hale.common.align.model.AlignmentUtil;
 import eu.esdihumboldt.hale.common.align.model.EntityDefinition;
@@ -136,6 +137,21 @@ class PostNASSchemaMatcher implements SchemaMatcher {
 
     // try to find matches for properties
 
+    // collect reference type properties by lowercase name
+    def refChildren = (Collection<ChildDefinition<?>>) ref.children
+    Map<String, EntityDefinition> refByName = refChildren.collectEntries {
+      if (it.name.namespaceURI && it.name.namespaceURI.startsWith('http://www.opengis.net/gml')) {
+        // ignore GML namespace properties (e.g. name)
+        [:]
+      }
+      else if (it.asProperty()) {
+        [(it.name.localPart.toLowerCase()): AlignmentUtil.getChild(refEntity, it.name)]
+      }
+      else {
+        [:]
+      }
+    }
+
     // first check all target properties for the information in their description
     //XXX really simple - no handling of choices
     def children = (Collection<ChildDefinition<?>>) target.getChildren()
@@ -144,14 +160,43 @@ class PostNASSchemaMatcher implements SchemaMatcher {
       if (property) {
         def propertyInfo = PostNASPropertyInfo.fromDescription(property.description)
 
+        // property reference in description
+        def targetProperty = AlignmentUtil.getChild(targetEntity, it.name)
+
         def refProperty = propertyInfo.findEntity(refEntity)
         if (refProperty) {
-          def targetProperty = AlignmentUtil.getChild(targetEntity, it.name)
-
           alignment.addCell(createCell(refProperty, targetProperty, RenameFunction.ID))
         }
         else {
-          println "No source match found for property ${target.displayName}.$it.displayName - $propertyInfo"
+          // try to manually find match
+
+          def byName = refByName.get(property.name.localPart)
+          if (byName) {
+            // relate to entity
+
+            if (byName.propertyPath && byName.propertyPath[-1].child.asProperty() &&
+                byName.propertyPath[-1].child.asProperty().propertyType.name.localPart == 'ReferenceType') {
+              // for ReferenceType connect to href
+              def byNameHref = new EntityAccessor(byName).findChildren('href').toEntityDefinition()
+              if (byNameHref) {
+                alignment.addCell(createCell(byNameHref, targetProperty, RenameFunction.ID))
+              }
+              else {
+                println "Unable to find href attribute in ReferenceType"
+                alignment.addCell(createCell(byName, targetProperty, RenameFunction.ID))
+              }
+            }
+            else {
+              alignment.addCell(createCell(byName, targetProperty, RenameFunction.ID))
+            }
+          }
+          else if (property.name.localPart == 'gml_id') {
+            // special case handling for GML id
+            //TODO
+          }
+          else {
+            println "No source match found for property ${target.displayName}.$it.displayName - $propertyInfo"
+          }
         }
       }
     }
