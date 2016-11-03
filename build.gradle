@@ -26,7 +26,7 @@ version = '3.1.0-SNAPSHOT'
  */
 
 repositories {
-  mavenLocal() // for testing
+//  mavenLocal() // for testing
   
   maven { // wetransform release repository (HALE releases and Eclipse dependencies)
     url 'https://artifactory.wetransform.to/artifactory/libs-release-local'
