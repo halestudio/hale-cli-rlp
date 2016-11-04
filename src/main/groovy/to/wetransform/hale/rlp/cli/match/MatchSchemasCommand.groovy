@@ -70,4 +70,6 @@ class MatchSchemasCommand implements Command {
   final String shortDescription = '''Generate a mapping from a reference schema (e.g. AAA XSD) to a
 target schema (e.g. PostNAS) based on a fixed set of pre-defined rules'''
 
+  final boolean experimental = true
+
 }
