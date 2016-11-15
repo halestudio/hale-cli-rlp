@@ -192,15 +192,49 @@ class PostNASSchemaMatcher implements SchemaMatcher {
           else if (property.name.localPart == 'gml_id') {
             // special case handling for GML id
 
-            // mapping for GML id and GML identifier
-            //XXX not sure yet how the relation to the identifier actually be described
+            // mapping for GML id
             def refId = new EntityAccessor(refEntity).findChildren('id').toEntityDefinition()
             if (refId) {
               alignment.addCell(createCell(refId, targetProperty, RenameFunction.ID))
             }
+            // mapping for GML identifier
+            /*
+             * XXX references in the DB schema are handled via gml_id, while
+             * in the XSD schema they are handled via the identifier. Thus in
+             * most cases replacing the identifier by gml_id will be correct.
+             * TODO mark as unsafe matching
+             */
             def refIdent = new EntityAccessor(refEntity).findChildren('identifier').toEntityDefinition()
             if (refIdent) {
               alignment.addCell(createCell(refIdent, targetProperty, RenameFunction.ID))
+            }
+          }
+          else if (property.name.localPart == 'identifier') {
+            // special case handling for identifier
+
+            // mapping for GML identifier
+            //XXX identifier is not used for references
+            /*
+            def refIdent = new EntityAccessor(refEntity).findChildren('identifier').toEntityDefinition()
+            if (refIdent) {
+              alignment.addCell(createCell(refIdent, targetProperty, RenameFunction.ID))
+            }
+            */
+          }
+          else if (property.name.localPart == 'ogc_fid') {
+            // ignore generated sequential id in database
+          }
+          else if (property.name.localPart == 'wkb_geometry') {
+            // handle geometry
+
+            // try "position"
+            def refPosition = new EntityAccessor(refEntity).findChildren('position').toEntityDefinition()
+            if (refPosition) {
+              //FIXME check if match is OK?
+              alignment.addCell(createCell(refPosition, targetProperty, RenameFunction.ID))
+            }
+            else {
+              println "No source match found for geometry property ${target.displayName}.$it.displayName - $propertyInfo"
             }
           }
           else {
