@@ -11,7 +11,8 @@ import eu.esdihumboldt.hale.common.schema.model.Schema
 import eu.esdihumboldt.hale.common.schema.model.impl.DefaultSchemaSpace;
 import eu.esdihumboldt.util.cli.Command
 import eu.esdihumboldt.util.cli.CommandContext
-import to.wetransform.halecli.project.ProjectHelper;
+import to.wetransform.halecli.project.ProjectHelper
+import to.wetransform.halecli.util.ProjectCLI;
 import to.wetransform.halecli.util.SchemaCLI;
 
 class MatchSchemasCommand implements Command {
@@ -22,9 +23,11 @@ class MatchSchemasCommand implements Command {
 
     cli._(longOpt: 'help', 'Show this help')
 
-    // options for schemas
+    // options for loading schemas
     SchemaCLI.loadSchemaOptions(cli, 'reference-schema', 'The reference schema')
     SchemaCLI.loadSchemaOptions(cli, 'target-schema', 'The target schema')
+    // options for project to save
+    ProjectCLI.saveProjectOptions(cli)
 
     OptionAccessor options = cli.parse(args)
 
@@ -62,7 +65,9 @@ class MatchSchemasCommand implements Command {
 
     ReportHandler reports = HaleCLIUtil.createReportHandler()
 
-    ProjectHelper.saveProject(project, alignment, sourceSS, targetSS, output, reports, 'halex')
+    println 'Saving generated project...'
+    ProjectCLI.saveProject(options, project, alignment, sourceSS, targetSS)
+    println 'Completed'
 
     return 0
   }
