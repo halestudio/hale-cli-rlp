@@ -16,4 +16,6 @@
 
 *.halex
 *.halex.alignment.xml
+*.halex.styles.sld
+/*.gml
 
