@@ -44,7 +44,7 @@ class PostNASPropertyInfo {
     if (description) {
       if (description.startsWith('Assoziation zu:')) {
         // association
-        // Example 'Assoziation zu: FeatureType AA_Meilenstein (aa_meilenstein) 1'
+        // Example 'Assoziation zu: FeatureType AA_Meilenstein (aa_meilenstein) 0..1'
 
         def descr = description[15..-1].trim()
         def parts = descr.split(/\s/)
@@ -68,26 +68,27 @@ class PostNASPropertyInfo {
       }
       else {
         // "normal" property
-        // Example 'modellart AA_Modellart|advStandardModell enumeration AA_AdVStandardModell 1'
+        // Example 'modellart|AA_Modellart|advStandardModell enumeration AA_AdVStandardModell 0..1'
 
         def parts = description.split(/\s/)
         if (parts.length >= 1) {
-          baseProperty = parts[0]
-        }
-        if (parts.length >= 2) {
-          String propertyString = parts[1]
-          if (propertyString) {
-            path = propertyString.split(/\|/) as List
+          String propertyPart = parts[0]
+
+          if (propertyPart) {
+            path = propertyPart.split(/\|/) as List
+            if (path) {
+              baseProperty = path.remove(0)
+            }
           }
         }
+        if (parts.length >= 2) {
+          typeCategory = parts[1] ?: null
+        }
         if (parts.length >= 3) {
-          typeCategory = parts[2] ?: null
+          typeName = parts[2] ?: null
         }
         if (parts.length >= 4) {
-          typeName = parts[3] ?: null
-        }
-        if (parts.length >= 5) {
-          cardinality = parts[4] ?: null
+          cardinality = parts[3] ?: null
         }
       }
     }
