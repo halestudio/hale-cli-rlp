@@ -6,6 +6,20 @@ Custom hale command line interface for LVermGeo RLP.
 The CLI lists available commands when run without arguments.
 RLP specific commands can be found in the category `rlp`.
 
+Commands
+--------
+
+**Generate a matching between PostNAS database schema and NAS XML Schema**
+
+Generates a hale project that describes the matching of PostNAS and NAS XML Schema.
+Relies on specific properties of the database schema, e.g. information provided in a specific format in table and column comments. 
+
+See help for usage instructions:
+
+```
+hale rlp match-schemas --help
+```
+
 
 Build
 -----
