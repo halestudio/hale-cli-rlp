@@ -18,8 +18,7 @@ project.ext {
   haleVersion = '3.3.0'
 }
 
-version = '3.3.0'
-//TODO define versioning strategy, specifically in respect to the main CLI project
+version = '3.4.0-SNAPSHOT'
 
 /*
  * Dependencies
