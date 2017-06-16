@@ -82,6 +82,7 @@ applicationDefaultJvmArgs = [
  * Custom run configuurations
  */
 
+/*
 task(generateSchemaMapping, dependsOn: 'classes', type: JavaExec) {
   def alignmentsPath = '../inspire-alignements'
   
@@ -95,6 +96,7 @@ task(generateSchemaMapping, dependsOn: 'classes', type: JavaExec) {
   )
   jvmArgs.addAll(applicationDefaultJvmArgs)
 }
+*/
 
 /*
  * plugin.xml and OSGi manifest
