@@ -14,11 +14,11 @@ sourceCompatibility = '1.8'
 group = 'to.wetransform'
 
 project.ext {
-  cliVersion = '3.3.1'
-  haleVersion = '3.3.1'
+  cliVersion = '3.3.2'
+  haleVersion = '3.3.2'
 }
 
-version = '3.3.1'
+version = '3.3.2'
 
 /*
  * Dependencies
